@@ -1,0 +1,8 @@
+const menu=document.querySelector('.menu'),nav=document.querySelector('nav');menu.addEventListener('click',()=>nav.classList.toggle('open'));nav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>nav.classList.remove('open')));
+const observer=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target)}}),{threshold:.12});document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+const audio=document.querySelector('#audio'),play=document.querySelector('#play'),progress=document.querySelector('#progress'),clock=document.querySelector('#clock'),status=document.querySelector('#audio-status');
+function fmt(t){return Number.isFinite(t)?Math.floor(t/60)+':'+String(Math.floor(t%60)).padStart(2,'0'):'0:00'}
+play.addEventListener('click',async()=>{if(audio.paused){try{await audio.play();play.textContent='Ⅱ';status.textContent='NOW PLAYING'}catch(e){status.textContent='ADD YOUR AUDIO FILE: assets/track.mp3'}}else{audio.pause();play.textContent='▶'}});
+audio.addEventListener('timeupdate',()=>{progress.style.width=(audio.duration?audio.currentTime/audio.duration*100:0)+'%';clock.textContent=fmt(audio.currentTime)});audio.addEventListener('ended',()=>{play.textContent='▶';progress.style.width='0%'});
+document.querySelector('.progress').addEventListener('click',e=>{if(audio.duration){const r=e.currentTarget.getBoundingClientRect();audio.currentTime=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width))*audio.duration}});
+document.querySelector('#year').textContent=new Date().getFullYear();
